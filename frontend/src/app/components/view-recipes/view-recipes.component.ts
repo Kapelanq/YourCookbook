@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpService } from '../../services/http.service';
+import { HttpService } from '../../services/http/http.service';
+import { PopupService } from '../../services/popup/popup.service';
+
 
 @Component({
   selector: 'app-view-recipes',
@@ -14,11 +16,13 @@ import { HttpService } from '../../services/http.service';
 })
 export class ViewRecipesComponent {
 
+  recipes: any;
   inputForm: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private httpService: HttpService,
+    private popupService: PopupService
   ) {}
 
   ngOnInit(): void {
@@ -28,13 +32,14 @@ export class ViewRecipesComponent {
   }
 
   submitForm(): void{
-     // console.log('Form data: ', this.inputForm.value['name']);
-      const recipe = this.inputForm.value['name'];
+      console.log('Form data: ', this.inputForm.value['name']);
+      this.recipes = this.inputForm.value['name'];
 
-      this.httpService.searchRecipe(recipe).subscribe(data => {
-        console.log(data);
+      this.httpService.searchRecipe(this.recipes).subscribe(data => {
+        console.log(data['meals']);
       });
 
+      this.popupService.openPopup();
 
   }
 
